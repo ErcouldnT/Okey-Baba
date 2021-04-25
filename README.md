@@ -20,6 +20,6 @@ The nightly build Online Java Script Okey Game, Rummikub your grandparents warne
 
 ## Link to recent app
 > https://okeybaba.herokuapp.com \
-> Note that it's a free dyno so wait a bit.
+> *Note that it's a free dyno so wait a bit.*
 
 &copy; 2021 Erkut
