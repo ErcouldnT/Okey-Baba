@@ -1,13 +1,12 @@
 const express = require('express');
 const app = express();
-app.enable('trust proxy');
-const http = require('http');
-const server = http.createServer(app);
+const server = require('http').createServer(app);
 const io = require("socket.io").listen(server);
 var _ = require('underscore');
 
 require('dotenv').config();
-app.use(express.static('client'))
+app.enable('trust proxy');
+app.use(express.static('client'));
 
 let onlineOyuncular = new Array;  //TODO: 4 kişiden fazla olmamalı!
 let currentPlayer = 1;
@@ -28,10 +27,8 @@ Object.defineProperty(Array.prototype, 'shuffle', {
 
 function oyunBaşlat() {
   sayılar = ["1","2","3","4","5","6","7","8","9","10","11","12","13"];
-  // ,"4","5","6","7","8","9","10","11","12","13"
   renkler = ["Kırmızı", "Sarı", "Siyah", "Mavi"];
   deste = new Array;
-  aktifOyuncu = new Array;
   
   const Taş = {
     isOkey: false,
@@ -134,7 +131,6 @@ function oyunBaşlat() {
     }
     desteSırala(destesi);  // Herkesin deck'ini sıralar. TODO: Sahte okeyi uygun yere koy.
     onlineOyuncular[oyuncu].destesi = destesi;
-    // aktifOyuncu.push(oyuncuYarat);
   };
 
   console.log(onlineOyuncular);
