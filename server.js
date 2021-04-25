@@ -1,10 +1,12 @@
 const express = require('express');
 const app = express();
+app.enable('trust proxy');
 const http = require('http');
 const server = http.createServer(app);
 const io = require("socket.io").listen(server);
 var _ = require('underscore');
 
+require('dotenv').config();
 app.use(express.static('client'))
 
 let onlineOyuncular = new Array;  //TODO: 4 kişiden fazla olmamalı!
@@ -213,6 +215,7 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(3000, () => {
-  console.log('Listening on http://localhost:3000');
+const port = process.env.PORT || 5000;
+server.listen(port, () => {
+  console.log(`Listening on http://localhost:${port}`);
 });
