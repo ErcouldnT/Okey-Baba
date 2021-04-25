@@ -1,0 +1,23 @@
+Player 1 için:
+1 yolladı 1 e koy.--
+2 yolladı 2 ye koy.--
+3 yolladı 3 e koy.--
+4 yolladı 4 e koy.--
+
+Player 2 için:
+1 yolladı 4 e koy.--
+2 yolladı 1 e koy.--
+3 yolladı 2 ye koy.--
+4 yolladu 3 e koy.--
+
+Player 3 için:
+1 yolladı 3 e koy.--
+2 yolladı 4 e koy.--
+3 yolladı 1 e koy.--
+4 yolladı 2 ye koy.--
+
+Player 4 için:
+1 yolladı 2 ye koy.--
+2 yolladı 3 e koy.--
+3 yolladı 4 e koy.--
+4 yolladı 1 e koy.--

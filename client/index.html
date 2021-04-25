@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Okey baba!</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="shortcut icon" type="image/png" href="favicon.png">
+</head>
+<body>
+  <div class="isim-al">
+    <h1 class="" >İsim gir: </h1>
+    <form id="form" action="">
+      <input class="inputform" id="input" autofocus autocomplete="off" />
+      <button class="devambuton">Devam</button>
+    </form>
+  </div>
+  <div class=" onlineliste yoket">
+    <h1 class="oyuncubekleniyor">Online Oyuncular: </h1>
+    <div class="oyunculistesi"></div>
+  </div>
+  <div class="oyunarea yoket">
+    <!-- <h1 class="header ">Başlıyor!</h1> -->
+    <div class="con-2">
+      <div class="taş" id="id-3"></div>
+      <div class="taş" id="id-2"></div>
+    </div>
+    <div class="con-1">
+      <div id="gösterge" class="gösterge taş"></div>
+      <div class="yeni taş"></div>
+    </div>
+    <div class="con-2">
+      <div class="taş" id="id-4"></div>
+      <div class="taş" id="id-1"></div>
+    </div>
+    <div>
+      <div class="info-message"></div>
+      <div id="board" class="board"></div>
+      <h3 class="">Istakan</h3>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/underscore@latest/underscore-umd-min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
