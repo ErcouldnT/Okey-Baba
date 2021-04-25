@@ -1,4 +1,4 @@
-# OKEY BABA
+# Okey Baba
 The nightly build Online Java Script Okey Game (Rummikub) your grandparents warned you about.
 
 ## Usage
@@ -8,8 +8,10 @@ The nightly build Online Java Script Okey Game (Rummikub) your grandparents warn
 > `npm run dev`
 
 ## TODO
-[ ] Make it work.
-[ ] Update the app.
-[ ] Make it clean code.
+* [ ] Make it work.
+* [ ] Update the app.
+* [ ] Make it clean code.
+
+
 
 &copy; 2021 Erkut
