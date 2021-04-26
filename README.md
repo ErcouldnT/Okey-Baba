@@ -1,22 +1,24 @@
 # Okey Baba
-The nightly build Online Java Script Okey Game, Rummikub your grandparents warned you about.
+The nightly coded Online Java Script Okey Game, Rummikub your grandparents warned you about.
 
 ## Usage
-> `npm install`
+> `npm i`
 
 ## Development server
 > `npm run dev`
 
 ## Todo
-* [ ] Make it work.
+* Make it work.
   * [ ] First player have 1 more extra tile to start game.
   * [ ] Taking rummy tile to your board.
     * [ ] from left-side player.
     * [ ] from middle deck.
-* [ ] Update the app.
+  * [ ] Handle game on player disconnect (MongoDB).
+  * [ ] Multiple game rooms.
+* Update the app.
   * [ ] Responsive layout.
   * [ ] Mobile friendly.
-* [ ] Make it clean code.
+* Make it clean code (and also English spells).
 
 ## Link to recent app
 > https://okeybaba.herokuapp.com \

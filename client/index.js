@@ -8,6 +8,7 @@ var oyuncuListesi = document.querySelector('.oyunculistesi');
 var oyunArea = document.querySelector('.oyunarea');
 var oyuncuBekleniyor = document.querySelector('.oyuncubekleniyor');
 var infoMessage = document.querySelector('.info-message');
+var yeniTaşÇek = document.querySelector('.yeni');
 
 // let id0_list = new Array;
 // let id1_list = new Array;
@@ -17,12 +18,28 @@ let taşSimge = "❤";
 let sahteOkeySimge = "♣";
 let taşÇekmeHakkı = false;
 let ilkBaşlayan = false;  // !TODO: Socket'ten bu bilgiyi de çek.
+let taşAldıMı = false;
 
 const id1 = document.getElementById("id-1");
 const id2 = document.getElementById("id-2");
 const id3 = document.getElementById("id-3");
 const id4 = document.getElementById("id-4");
 
+// Ortadan yeni taş alma işlemi:
+yeniTaşÇek.addEventListener("dblclick", (e) => {
+  e.preventDefault();
+  if (you === currentPlayer && taşÇekmeHakkı === true) {
+    console.log("Ortadan yeni taş çekildi."); // 'socket to deste'den taş iste.
+    // Socket'ten gelen taşı oyuncunun gerçek destesine eklemeyi unutma!
+    // !TODO: Some logic.
+
+    // Tekrar taş çekmesini engelle:
+    taşÇekmeHakkı = false;
+    taşAldıMı = true;
+  };
+});
+
+// Sol taraftaki oyuncunın attığı taşı alma işlemi:
 id4.addEventListener("dblclick", (e) => {
   e.preventDefault();
   if (you === currentPlayer && taşÇekmeHakkı === true) {
@@ -36,6 +53,7 @@ id4.addEventListener("dblclick", (e) => {
 
     // Tekrar taş çekmesini engelle:
     taşÇekmeHakkı = false;
+    taşAldıMı = true;
   };
 });
 
@@ -64,19 +82,30 @@ function taşRenkÇevirici(taş, divtaş) {
   };
 };
 
+// Oyun başladığı anda tetiklenir.
 socket.on('player', function(player) {
   currentPlayer = player.current;
   you = player.you;
+  ilkBaşlayan = player.ilkBaşlar;
+  if (ilkBaşlayan) {
+    infoMessage.textContent = "Oyuna sen başlıyorsun."
+    // !TODO: Oyuncuya ekstra 1 taş daha ver.
+    // Sadece taş transferini kontrol eden bir socket açılabilir. 'Deste to oyuncu' arası.
+    //ilkBaşlayan = false;
+  } else {
+    infoMessage.textContent = "1 nolu oyuncu bekleniyor."
+  };
   console.log("current: " + currentPlayer + ", " + "you: " + you);
 });
 
+// Bu socket taş atıldığında tetiklenir.
 socket.on('current player', function(info) {
   currentPlayer = info.current;
   taşÇekmeHakkı = info.taşHakkı;
   console.log("current: " + currentPlayer + ", " + "you: " + you);
   // !TODO: İlk başlayan kimse onu da buraya ekle.
   if (currentPlayer === you) {
-    infoMessage.textContent = "Sıra sende"
+    infoMessage.textContent = "Sıra sende."
   } else {
     infoMessage.textContent = `${currentPlayer} nolu oyuncu bekleniyor.`
   };
@@ -218,8 +247,12 @@ socket.on('your board', function(yours) {
       // Çift tıklayınca taşı yolla.
       div.addEventListener("dblclick", event => {
         event.preventDefault();
-        if (you === currentPlayer) {  // Sıra sendeyse.
-          // console.log("Çift tıklandı.");
+        // Sıra sendeyse ve Yeni taş aldıysan yollayabilirsin. YA DA İlk oyuncu isen!
+        // ilkBaşlayan
+        if (ilkBaşlayan || you === currentPlayer && taşAldıMı) {
+          //!BUG: Player-1 taş çekmeden taş yolluyor.
+          taşAldıMı = false;
+          ilkBaşlayan = false;  // Bug solved.
           // Client-side validation:
           const isContain = !!yourBoard.find(taş => {  
             return taş === element;

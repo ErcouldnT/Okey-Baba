@@ -24,7 +24,6 @@ Object.defineProperty(Array.prototype, 'shuffle', {
 });
 
 //TODO: Function haline getir. Her oyunda yeniden taşları dağıtsın.
-
 function oyunBaşlat() {
   sayılar = ["1","2","3","4","5","6","7","8","9","10","11","12","13"];
   renkler = ["Kırmızı", "Sarı", "Siyah", "Mavi"];
@@ -90,14 +89,14 @@ function oyunBaşlat() {
     // TODO: Okey = 1 ise Göstergeyi 13'e yönlendir!
     if (okeytaşı.sayı !== "1") {
       if (taş.renk === okeytaşı.renk && Number(taş.sayı) === Number(okeytaşı.sayı) - 1) {
-        const göstergeTaşı = taş;
+        var göstergeTaşı = taş;
         göstergeTaşı.isGösterge = true;
         console.log(göstergeTaşı);
         break
       }
     } else {
       if (taş.renk === okeytaşı.renk && taş.sayı === "13") {
-        const göstergeTaşı = taş;
+        var göstergeTaşı = taş;  //Test: Buna dışardan erişmeyi dene. Works!
         göstergeTaşı.isGösterge = true;
         console.log(göstergeTaşı);
         break
@@ -105,9 +104,9 @@ function oyunBaşlat() {
     }
   }
   deste.shuffle();  // Son karıştırma. Sahte okey eklendikten sonra.
+  //const göstergeTaşı = _.where(deste, { isGösterge: true })[0];  // Gereksiz? YES.
   
-  const göstergeTaşı = _.where(deste, { isGösterge: true })[0];
-  
+  // Fonksiyonları ayrı .js'e al.
   function desteSırala(deste) {
     deste.sort((a, b) => {
       return a.sayı - b.sayı;
@@ -148,6 +147,10 @@ io.on('connection', (socket) => {
     isim = isim.trim().toLowerCase().replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
     const oyuncuIndex = onlineOyuncular.length + 1;
     const oyuncu = { player: oyuncuIndex, id: soketID, adı: isim };
+    // Tek satır if-statement'a dönüştür.
+    if ( onlineOyuncular.length === 0 ) {
+      oyuncu.isFirstPlayer = true;
+    };
     onlineOyuncular.push(oyuncu);
     console.log(onlineOyuncular);
     io.emit('oyuncular', onlineOyuncular);  //TODO: 4'ten fazla olmamalı!
@@ -155,12 +158,14 @@ io.on('connection', (socket) => {
     if (onlineOyuncular.length === 4) {
       const [ göstergeTaşı, onlineOyuncular ] = oyunBaşlat();  // Multiple return alma işlemi böyle.
       let kendiDestesi = function(oyuncu, index) {
+        // Hepsini tek obje olarak yolla. Client'ta yakala.
         io.to(oyuncu.id).emit('oyun bilgisi', "Oyun başlıyor...");
         io.to(oyuncu.id).emit('gösterge taşı', göstergeTaşı);
         io.to(oyuncu.id).emit('your board', onlineOyuncular[index].destesi);
         io.to(oyuncu.id).emit('player', { 
           current: currentPlayer, 
-          you: onlineOyuncular[index].player
+          you: onlineOyuncular[index].player,
+          ilkBaşlar: oyuncu.isFirstPlayer
           // yourDeck + Gösterge falan tek seferde buradan gönderilebilir.
         });
         // console.log(index + ' : ' + element + ' - ' + array[index])
@@ -179,8 +184,8 @@ io.on('connection', (socket) => {
     //   taşıYollayan: oyuncuSırası,
     //   taş: element.taş
     // };
-    // Server-side validation:
     try {
+      // Server-side validation:
       const oyuncuyuBul = _.where(onlineOyuncular, { id: soketID });  // Returns list!
       var oyuncuSırası = oyuncuyuBul[0].player;
       if (oyuncuSırası === currentPlayer) {
