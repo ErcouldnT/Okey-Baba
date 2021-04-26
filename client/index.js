@@ -17,7 +17,7 @@ var yeniTaşÇek = document.querySelector('.yeni');
 let taşSimge = "❤";
 let sahteOkeySimge = "♣";
 let taşÇekmeHakkı = false;
-let ilkBaşlayan = false;  // !TODO: Socket'ten bu bilgiyi de çek.
+let ilkBaşlayan = false;
 let taşAldıMı = false;
 
 const id1 = document.getElementById("id-1");
@@ -280,6 +280,8 @@ socket.on('your board', function(yours) {
           div.innerHTML = "";
           // console.log(div);
           // div.classList.add("giden");
+        } else if (you === currentPlayer && !taşAldıMı) {
+          alert("Taş almayı unuttun!");
         };
       });
 
