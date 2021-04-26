@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 const server = require('http').createServer(app);
 const io = require("socket.io").listen(server);
@@ -6,7 +7,7 @@ var _ = require('underscore');
 
 require('dotenv').config();
 app.enable('trust proxy');
-app.use(express.static('client'));
+app.use(express.static(path.join(__dirname , '../client')));
 
 let onlineOyuncular = new Array;  //TODO: 4 kişiden fazla olmamalı!
 let currentPlayer = 1;
