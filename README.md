@@ -8,17 +8,26 @@ The nightly coded Online Java Script Okey Game, Rummikub your grandparents warne
 > `npm run dev`
 
 ## Todo
-* *Make it work.*
-  * [x] First player have 1 more extra tile to start game.
-  * [ ] Taking rummy tile to your board.
+* *Basic game logic*
+  * ~First player have 1 more extra tile to start game.~
+  * Taking rummy tile to your board.
     * [ ] from left-side player.
     * [ ] from middle deck.
-  * [ ] Handle game on player disconnect (MongoDB).
-  * [ ] Multiple game rooms.
-* *Update the app.*
-  * [ ] Responsive layout.
-  * [ ] Mobile friendly.
-* *Make it clean code (and also English spells).*
+  * Show all players on the screen.
+  * Point management.
+  * Playing indicator tile at the 1st round.
+* *Advanced*
+  * Handle game on player disconnect (MongoDB).
+  * Logic for game ending.
+    * [ ] Ending w/out Joker.
+    * [ ] Ending w/ 1 Joker.
+    * [ ] Ending w/ 2 Jokers.
+  * Multiple game rooms.
+* *Update the app*
+  * Animations.
+  * Responsive layout.
+    * [ ] Mobile friendly.
+* *Make it clean code (and also English spells)*
 
 ## Link to recent app
 > https://okeybaba.herokuapp.com \
