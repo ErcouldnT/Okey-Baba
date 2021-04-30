@@ -1,5 +1,6 @@
 var socket = io();
 
+// Html elements
 var form = document.getElementById('form');
 var input = document.getElementById('input');
 var isimDivi = document.querySelector('.isim-al');
@@ -9,24 +10,21 @@ var oyunArea = document.querySelector('.oyunarea');
 var oyuncuBekleniyor = document.querySelector('.oyuncubekleniyor');
 var infoMessage = document.querySelector('.info-message');
 var yeniTaşÇek = document.querySelector('.yeni');
+const id1 = document.getElementById("id-1");
+const id2 = document.getElementById("id-2");
+const id3 = document.getElementById("id-3");
+const id4 = document.getElementById("id-4");
 
-// let id0_list = new Array;
-// let id1_list = new Array;
-// let id2_list = new Array;
-// let id3_list = new Array;
+// Variables
 let taşSimge = "❤";
 let sahteOkeySimge = "♣";
 let taşÇekmeHakkı = false;
 let ilkBaşlayan = false;
 let taşAldıMı = false;
 
-const id1 = document.getElementById("id-1");
-const id2 = document.getElementById("id-2");
-const id3 = document.getElementById("id-3");
-const id4 = document.getElementById("id-4");
-
-// Ortadan yeni taş alma işlemi:
+// Event listeners
 yeniTaşÇek.addEventListener("dblclick", (e) => {
+  // Ortadan yeni taş alma işlemi:
   e.preventDefault();
   if (you === currentPlayer && taşÇekmeHakkı === true) {
     console.log("Ortadan yeni taş çekildi."); // 'socket to deste'den taş iste.
@@ -39,8 +37,8 @@ yeniTaşÇek.addEventListener("dblclick", (e) => {
   };
 });
 
-// Sol taraftaki oyuncunın attığı taşı alma işlemi:
 id4.addEventListener("dblclick", (e) => {
+  // Sol taraftaki oyuncunın attığı taşı alma işlemi:
   e.preventDefault();
   if (you === currentPlayer && taşÇekmeHakkı === true) {
     console.log("Taş çekildi: " + id4.textContent);
@@ -57,12 +55,7 @@ id4.addEventListener("dblclick", (e) => {
   };
 });
 
-// Testing only.
-// id0.textContent = "0"
-// id1.textContent = "1"
-// id2.textContent = "2"
-// id3.textContent = "3"
-
+// Functions
 function taşRenkÇevirici(taş, divtaş) {
   divtaş.className = "taş";
   divtaş.textContent = divtaş.textContent + taşSimge;
@@ -70,7 +63,6 @@ function taşRenkÇevirici(taş, divtaş) {
     divtaş.textContent = sahteOkeySimge;
     divtaş.classList.add("yeşil");  // Farklı renkte Sahte okey gelmesini önler.
   };
-
   if (taş.renk === "Kırmızı") {
     divtaş.classList.add("kırmızı");
   } else if (taş.renk === "Sarı") {
@@ -82,28 +74,26 @@ function taşRenkÇevirici(taş, divtaş) {
   };
 };
 
-// Oyun başladığı anda tetiklenir.
+// Sockets
 socket.on('player', function(player) {
+  // Oyun başladığı anda tetiklenir.
   currentPlayer = player.current;
   you = player.you;
   ilkBaşlayan = player.ilkBaşlar;
   if (ilkBaşlayan) {
     infoMessage.textContent = "Oyuna sen başlıyorsun."
-    // !TODO: Oyuncuya ekstra 1 taş daha ver.
     // Sadece taş transferini kontrol eden bir socket açılabilir. 'Deste to oyuncu' arası.
-    //ilkBaşlayan = false;
   } else {
     infoMessage.textContent = "1 nolu oyuncu bekleniyor."
   };
   console.log("current: " + currentPlayer + ", " + "you: " + you);
 });
 
-// Bu socket taş atıldığında tetiklenir.
 socket.on('current player', function(info) {
+  // Bu socket taş atıldığında tetiklenir.
   currentPlayer = info.current;
   taşÇekmeHakkı = info.taşHakkı;
   console.log("current: " + currentPlayer + ", " + "you: " + you);
-  // !TODO: İlk başlayan kimse onu da buraya ekle.
   if (currentPlayer === you) {
     infoMessage.textContent = "Sıra sende."
   } else {
@@ -114,10 +104,8 @@ socket.on('current player', function(info) {
 socket.on('masa taşı', function(taşBilgisi) {
   taşıYollayan = taşBilgisi.taşıYollayan;
   taş = taşBilgisi.taş;
-  console.log(taşıYollayan+" nolu oyuncu tarafından "+taş.renk+" "+taş.sayı+" yollandı.");
-  // Taşı yollayan sensen 1'e koy.
+  console.log(taşıYollayan + " nolu oyuncu tarafından " + taş.renk + " " + taş.sayı + " yollandı.");
   if (taşıYollayan === you) {
-    //document.getElementById(`id-${you}`).textContent = taş.sayı;
     id1.textContent = taş.sayı;
     taşRenkÇevirici(taş, id1)
   } else if (you === 1 && taşıYollayan === 2) {
@@ -158,7 +146,6 @@ socket.on('masa taşı', function(taşBilgisi) {
     taşRenkÇevirici(taş, id4)
   };
 });
-// TODO: Aynı id'leri birleştir.
 
 socket.on('client konsol', function(msg) {
   // var item = document.createElement('li');
@@ -292,6 +279,7 @@ socket.on('your board', function(yours) {
       // board.appendChild(div);
   
       div.addEventListener("contextmenu", event => {
+        // Sağ tıklayınca taş çevirme özelliği:
         event.preventDefault();
         // const değer = event.target.textContent;
         // console.log(değer);
@@ -307,6 +295,7 @@ socket.on('your board', function(yours) {
   
   createBoard();
   addElement();
+  //TODO: Bağlantı koparsa "connection error" yazdır.
   
   // 1. Elinde hiç okey yok
   // 2. 1 Okey var.

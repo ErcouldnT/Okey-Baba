@@ -72,6 +72,11 @@ io.on('connection', (socket) => {
       };
     } catch (error) {
       console.log(error);
+      // Atılan taşların backup'ını tut. Biri taş çektiğinde alttaki görünsün.
+      // let id0_list = new Array;
+      // let id1_list = new Array;
+      // let id2_list = new Array;
+      // let id3_list = new Array;
     };
   });
 
