@@ -17,16 +17,21 @@ The nightly coded Online Java Script Okey Game, Rummikub your grandparents warne
   * Taking rummy tile to your board.
     * [ ] From left-side player.
     * [ ] From middle deck.
-  * Show all players on the screen.
-  * Point management.
-  * Playing indicator tile at the 1st round.
+  * Show all players (and points) on the screen.
+  * Show counter for middle tiles left.
 * *Advanced*
   * Handle game on player disconnect (MongoDB).
+  * Point management.
+  * Playing indicator tile at the 1st round logic.
   * Logic for game ending.
     * [ ] Ending w/o Joker.
     * [ ] Ending w/ 1 Joker.
     * [ ] Ending w/ 2 Jokers.
   * Multiple game rooms.
+    * [ ] Create a room with point options.
+    * [ ] Easy room join like url/:room_id.
+    * [ ] Players can choose where sit.
+    * [ ] Ready and Start buttons.
 * *Update the app*
   * Animations.
   * Responsive layout.
