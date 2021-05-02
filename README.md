@@ -27,17 +27,24 @@ The nightly coded Online Java Script Okey Game, Rummikub your grandparents warne
     * [ ] Ending w/o Joker.
     * [ ] Ending w/ 1 Joker.
     * [ ] Ending w/ 2 Jokers.
+    * [ ] Okey!
+  * Client-side and Server-side validations.
+    * [ ] Player deck.
+    * [ ] Middle deck.
+    * [ ] Discarded tiles.
+    * [ ] Game ending.
   * Multiple game rooms.
     * [ ] Create a room with point options.
     * [ ] Easy room join like url/:room_id.
     * [ ] Players can choose where sit.
     * [ ] Ready and Start buttons.
 * *Update the app*
-  * Animations.
-  * Responsive layout.
-    * [ ] Mobile friendly.
   * Sound effects.
-* *Make it clean code (and also English spells)*
+  * Responsive layout.
+    * [ ] Animations.
+    * [ ] Mobile friendly.
+  * Make it clean code (and also English spells).
+  * Game-bot for disconnected players at different difficulty levels.
 
 ## Link to recent app
 > https://okeybaba.herokuapp.com \
