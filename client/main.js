@@ -56,7 +56,40 @@ id4.addEventListener("dblclick", (e) => {
 });
 
 // Functions
-function taşRenkÇevirici(taş, divtaş) {
+function oyuncudanGelenTaşıAl() {
+  // Sol taraftan gelen taşı alma işlemi: id4
+  // Sağ tarafta taş yollama işlemi: id1
+  //Array döndürür, board'daki bütün taşları içeren....Zaten var bu, yourBoard.
+  //var taş_boardu = document.querySelectorAll(".board .taş"); // Bunu en sona at!
+  var gelen_taş = document.querySelectorAll(".gelen-taş-yeri > div");
+  //var giden_taş = document.querySelectorAll(".giden-taş-yeri div");
+  gelen_taş.forEach(taş => {
+    taş.setAttribute('draggable', true);
+    // console.log(element);
+    taş.addEventListener('dragstart', taşı_kaydır);
+    function taşı_kaydır(e) {
+      // e.dataTransfer.setData('text/plain', e.target.id);
+      setTimeout(() => {
+        e.target.style.display = 'none';
+      }, 0);
+    };
+  });
+
+  // elem.removeAttribute('dragable');
+  // elem.addEventListener('dragstart', ev => {
+  //   // code here.
+  // }, false);
+};
+
+function taşYarat(taş, id1) {  // Taş'ın bağlı bulunduğu parent div.
+  var yollanan_taş = document.createElement("div");
+  var taş_ismi = document.createTextNode(taş.sayı);
+  yollanan_taş.appendChild(taş_ismi);
+  id1.appendChild(yollanan_taş);
+  return yollanan_taş;
+};
+
+function taşRenkÇevirici(taş, divtaş) {  // Spesifik olarak tek bir taşın div'i.
   divtaş.className = "taş";
   divtaş.textContent = divtaş.textContent + taşSimge;
   if (taş.isSahteOkey) {
@@ -102,49 +135,36 @@ socket.on('current player', function(info) {
 });
 
 socket.on('masa taşı', function(taşBilgisi) {
+  // Biri taş yolladığında tetiklenir.
   taşıYollayan = taşBilgisi.taşıYollayan;
   taş = taşBilgisi.taş;
   console.log(taşıYollayan + " nolu oyuncu tarafından " + taş.renk + " " + taş.sayı + " yollandı.");
   if (taşıYollayan === you) {
-    id1.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id1)
-  } else if (you === 1 && taşıYollayan === 2) {
-    id2.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id2)
-  } else if (you === 1 && taşıYollayan === 3) {
-    id3.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id3)
-  } else if (you === 1 && taşıYollayan === 4) {
-    id4.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id4)
-  } else if (you === 2 && taşıYollayan === 1) {
-    id4.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id4)
-  } else if (you === 2 && taşıYollayan === 3) {
-    id2.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id2)
-  } else if (you === 2 && taşıYollayan === 4) {
-    id3.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id3)
-  } else if (you === 3 && taşıYollayan === 1) {
-    id3.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id3)
-  } else if (you === 3 && taşıYollayan === 2) {
-    id4.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id4)
-  } else if (you === 3 && taşıYollayan === 4) {
-    id2.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id2)
-  } else if (you === 4 && taşıYollayan === 1) {
-    id2.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id2)
-  } else if (you === 4 && taşıYollayan === 2) {
-    id3.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id3)
-  } else if (you === 4 && taşıYollayan === 3) {
-    id4.textContent = taş.sayı;
-    taşRenkÇevirici(taş, id4)
+    var yollanan_taş = taşYarat(taş, id1);
+    taşRenkÇevirici(taş, yollanan_taş);
+  } else if (
+    (you === 1 && taşıYollayan === 2) || 
+    (you === 2 && taşıYollayan === 3) ||
+    (you === 3 && taşıYollayan === 4) ||
+    (you === 4 && taşıYollayan === 1)) {
+    var yollanan_taş = taşYarat(taş, id2);
+    taşRenkÇevirici(taş, yollanan_taş);
+  } else if (
+    (you === 1 && taşıYollayan === 3) ||
+    (you === 2 && taşıYollayan === 4) ||
+    (you === 3 && taşıYollayan === 1) ||
+    (you === 4 && taşıYollayan === 2)) {
+    var yollanan_taş = taşYarat(taş, id3);
+    taşRenkÇevirici(taş, yollanan_taş);
+  } else if (
+    (you === 1 && taşıYollayan === 4) ||
+    (you === 2 && taşıYollayan === 1) ||
+    (you === 3 && taşıYollayan === 2) ||
+    (you === 4 && taşıYollayan === 3)) {
+    var yollanan_taş = taşYarat(taş, id4);
+    taşRenkÇevirici(taş, yollanan_taş);
   };
+  oyuncudanGelenTaşıAl();  //Bug solved: Taş oluştuktan sonra.
 });
 
 socket.on('client konsol', function(msg) {
@@ -231,8 +251,8 @@ socket.on('your board', function(yours) {
       //   console.log(element);
       // });
 
-      // Çift tıklayınca taşı yolla.
       div.addEventListener("dblclick", event => {
+        // Çift tıklayınca taşı yolla.
         event.preventDefault();
         // Sıra sendeyse ve Yeni taş aldıysan yollayabilirsin. YA DA İlk oyuncu isen!
         // ilkBaşlayan
@@ -267,7 +287,7 @@ socket.on('your board', function(yours) {
           div.innerHTML = "";
           // console.log(div);
           // div.classList.add("giden");
-        } else if (you === currentPlayer && !taşAldıMı) {
+        } else if (currentPlayer && you === currentPlayer && !taşAldıMı) {
           alert("Taş almayı unuttun!");
         };
       });
@@ -366,25 +386,27 @@ form.addEventListener('submit', function(e) {
 // Sağ tık blocker.
 document.addEventListener('contextmenu', event => event.preventDefault());
 
-var ıstakadaKaydır = document.querySelector(".board")
-new Sortable(ıstakadaKaydır, {
-  //animation: 150,
-  //swapThreshold: 0.5,
-  //swap: true,
-  animation: 150,
-  swapThreshold: 0.5,
-  swap: true, // To disable sorting: set sort to false
-  // draggable: ".taş"
-  // ghostClass: "görünmez"
-  // onEnd: function (evt) {
-  //   if (evt.to !== evt.from ) {
-  //     evt.item.classList.add("giden");
-  //   };
-  // }
-});
-// new Sortable(id0, {
-//   group: 'shared',
-//   animation: 150,
-//   sort: false,
-//   // draggable: ".taş"
-// });
+var board = document.querySelector(".board")
+// console.log(board);
+// new Sortable(ıstakadaKaydır, {
+  //   //animation: 150,
+  //   //swapThreshold: 0.5,
+  //   //swap: true,
+  //   animation: 150,
+  //   swapThreshold: 0.5,
+  //   swap: true, // To disable sorting: set sort to false
+  //   // draggable: ".taş"
+  //   // ghostClass: "görünmez"
+  //   // onEnd: function (evt) {
+    //   //   if (evt.to !== evt.from ) {
+      //   //     evt.item.classList.add("giden");
+      //   //   };
+      //   // }
+      // });
+      // new Sortable(id0, {
+        //   group: 'shared',
+        //   animation: 150,
+        //   sort: false,
+        //   // draggable: ".taş"
+        // });
+        

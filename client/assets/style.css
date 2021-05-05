@@ -28,17 +28,19 @@ body
 }
 
 .board {
-  display: flex;
+  display: grid;
   padding: 20px;
   justify-content: center;
-  gap: 5px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   background-color: blanchedalmond;
   height: 400px;
   width: 1600px;
-  flex-wrap: wrap;
   align-items: center;
   border-radius: 5px;
+  grid-template-columns: repeat(14, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 5px;
+  grid-row-gap: 15px; 
 }
 
 .board div {
@@ -73,6 +75,11 @@ h3 {
 
 .taş:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.gelen-taş-yeri,
+.giden-taş-yeri {
+  border-style: dashed;
 }
 
 .kırmızı {
