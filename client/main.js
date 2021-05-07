@@ -23,22 +23,26 @@ let ilkBaşlayan = false;
 let taşAldıMı = false;
 
 // Event listeners
-yeniTaşÇek.addEventListener("dblclick", (e) => {
-  // Ortadan yeni taş alma işlemi:
+// Ortadan yeni taş alma işlemi:
+//yeniTaşÇek.addEventListener("dblclick", çiftTıkOrtaYeniTaşAl);
+
+function çiftTıkOrtaYeniTaşAl(e) {
   e.preventDefault();
   if (you === currentPlayer && taşÇekmeHakkı === true) {
     console.log("Ortadan yeni taş çekildi."); // 'socket to deste'den taş iste.
     // Socket'ten gelen taşı oyuncunun gerçek destesine eklemeyi unutma!
     // !TODO: Some logic.
-
+  
     // Tekrar taş çekmesini engelle:
     taşÇekmeHakkı = false;
     taşAldıMı = true;
   };
-});
+};
 
-id4.addEventListener("dblclick", (e) => {
-  // Sol taraftaki oyuncunın attığı taşı alma işlemi:
+// Sol taraftaki oyuncunın attığı taşı alma işlemi:
+//id4.addEventListener("dblclick", çiftTıkSolTaraftanTaşAl);
+
+function çiftTıkSolTaraftanTaşAl(e) {
   e.preventDefault();
   if (you === currentPlayer && taşÇekmeHakkı === true) {
     console.log("Taş çekildi: " + id4.textContent);
@@ -48,12 +52,12 @@ id4.addEventListener("dblclick", (e) => {
     //Değilse, son child'a ekle 28.th-child olması lazım.
     //class ları id4 div'inden kes-al.
     //TextContent'i de kes-al.
-
+  
     // Tekrar taş çekmesini engelle:
     taşÇekmeHakkı = false;
     taşAldıMı = true;
   };
-});
+};
 
 // Functions
 function oyuncudanGelenTaşıAl() {
@@ -66,19 +70,121 @@ function oyuncudanGelenTaşıAl() {
   gelen_taş.forEach(taş => {
     taş.setAttribute('draggable', true);
     // console.log(element);
-    taş.addEventListener('dragstart', taşı_kaydır);
-    function taşı_kaydır(e) {
-      // e.dataTransfer.setData('text/plain', e.target.id);
+    taş.addEventListener('dragstart', dragStart);
+    // taş.addEventListener('drag', drag);
+    // taş.addEventListener('dragend', dragEnd); // Taşın yeri değişmediyse geri koy.
+
+    function dragStart(e) {
+      var taşınan_taş = e.target;
       setTimeout(() => {
         e.target.style.display = 'none';
       }, 0);
     };
   });
 
+  const taş_yerleri = document.querySelectorAll('.board > div');
+  taş_yerleri.forEach(taş_yeri => {
+    taş_yeri.addEventListener('dragenter', dragEnter)
+    taş_yeri.addEventListener('dragover', dragOver);
+    taş_yeri.addEventListener('dragleave', dragLeave);
+    taş_yeri.addEventListener('drop', drop);
+  });
+
+  function dragEnter(e) {
+    e.preventDefault();
+    e.target.classList.add('drag-over');
+  }
+
+  function dragOver(e) {
+    e.preventDefault();
+    e.target.classList.add('drag-over');
+  }
+
+  function dragLeave(e) {
+    e.target.classList.remove('drag-over');
+  }
+
+  function drop(e) {
+    e.target.classList.remove('drag-over');
+    // const id = e.dataTransfer.getData('text/plain');
+    // const draggable = document.getElementById(id);
+    var draggable = taşınan_taş;
+    e.target.appendChild(draggable);
+    draggable.style.display = 'block';
+  }
+
   // elem.removeAttribute('dragable');
   // elem.addEventListener('dragstart', ev => {
   //   // code here.
   // }, false);
+};
+
+function boarddaTaşGezdir() {
+  const taşlar = document.querySelectorAll('.board > div > div');
+  taşlar.forEach(taş => {
+    taş.setAttribute('draggable', true);
+    taş.addEventListener('dragstart', dragStart);
+    taş.addEventListener('drag', drag);
+    taş.addEventListener('dragend', dragEnd); // Taşın yeri değişmediyse geri koy.
+    //taş.remove();
+  });
+  function dragStart(e) {
+    console.log(e.target);
+    e.target.setAttribute('id', 'taşıyorum');
+    e.dataTransfer.setData('text/plain', e.target.id);
+    setTimeout(() => {
+      e.target.classList.add('yoket');
+    }, 0);
+
+  };
+  function drag(e) {
+    e.preventDefault();
+    console.log('taş sürükleniyor.');
+  };
+
+  function dragEnd(e) {
+    e.preventDefault();
+    e.target.removeAttribute('id');
+    e.target.classList.remove('yoket');
+  };
+
+  // TAŞ YERLERİ
+  const taş_yerleri = document.querySelectorAll('.board > div');
+  taş_yerleri.forEach(taş_yeri => {
+    taş_yeri.addEventListener('dragenter', dragEnter);
+    taş_yeri.addEventListener('dragover', dragOver);
+    taş_yeri.addEventListener('dragleave', dragLeave);
+    taş_yeri.addEventListener('drop', drop);
+  });
+
+  function dragEnter(e) {
+    e.preventDefault();
+    //e.target.classList.add('drag-over');
+  };
+
+  function dragOver(e) {
+    e.preventDefault();
+    //e.target.classList.add('drag-over');
+  };
+
+  function dragLeave(e) {
+    e.preventDefault();
+    //e.target.classList.remove('drag-over');
+  };
+
+  function drop(e) {
+    e.preventDefault();
+    //e.target.classList.remove('drag-over');
+    const yeniyer = document.getElementById(e.target.id);
+    //console.log(yeniyer.firstChild);
+    if (!yeniyer.firstChild) {
+      const id = e.dataTransfer.getData('text/plain');
+      var sürüklenen = document.getElementById(id);
+      e.target.appendChild(sürüklenen);
+      //sürüklenen.classList.remove('yoket');  // Drag event'i bittiğinde yapıyor zaten.
+    };
+    sürüklenen.removeAttribute('id');
+  };
 };
 
 function taşYarat(taş, id1) {  // Taş'ın bağlı bulunduğu parent div.
@@ -164,7 +270,7 @@ socket.on('masa taşı', function(taşBilgisi) {
     var yollanan_taş = taşYarat(taş, id4);
     taşRenkÇevirici(taş, yollanan_taş);
   };
-  oyuncudanGelenTaşıAl();  //Bug solved: Taş oluştuktan sonra.
+  // oyuncudanGelenTaşıAl();  //Bug solved: Taş oluştuktan sonra.
 });
 
 socket.on('client konsol', function(msg) {
@@ -227,7 +333,7 @@ socket.on('your board', function(yours) {
   function createBoard() {
     for (let i = 0; i < width*height; i++) {
       const square = document.createElement("div");
-      square.setAttribute('id', i);
+      square.setAttribute('id', i + 1); // div id'leri 1'den başlasın.
       // square.classList.add(yourBoard[i])
       board.appendChild(square);
       // squares.push(square);
@@ -238,9 +344,10 @@ socket.on('your board', function(yours) {
     for (let i = 0; i < yourBoard.length; i++) {
       const element = yourBoard[i];
   
-      const div = document.getElementById(`${i}`);
+      const div = document.getElementById(`${i + 1}`);
       // console.log(div);
-      div.textContent = `${element.sayı}`;
+      const taş = document.createElement('div');
+      taş.textContent = `${element.sayı}`;
       // const text = document.createTextNode(`${element.sayı}`);
       // div.appendChild(text);
   
@@ -251,8 +358,7 @@ socket.on('your board', function(yours) {
       //   console.log(element);
       // });
 
-      div.addEventListener("dblclick", event => {
-        // Çift tıklayınca taşı yolla.
+      function çiftTıkTaşYolla(event) {
         event.preventDefault();
         // Sıra sendeyse ve Yeni taş aldıysan yollayabilirsin. YA DA İlk oyuncu isen!
         // ilkBaşlayan
@@ -282,30 +388,35 @@ socket.on('your board', function(yours) {
           };
 
           // LTODO: İçeriği temizlemenin başka yolunu bul.
-          div.className = "";
-          div.textContent = "";
-          div.innerHTML = "";
+          taş.className = "";
+          taş.textContent = "";
+          taş.innerHTML = "";
           // console.log(div);
           // div.classList.add("giden");
         } else if (currentPlayer && you === currentPlayer && !taşAldıMı) {
           alert("Taş almayı unuttun!");
         };
-      });
+      };
 
-      taşRenkÇevirici(element, div);
+      // Çift tıklayınca taşı yolla.
+      //taş.addEventListener("dblclick", çiftTıkTaşYolla);
+
+      taşRenkÇevirici(element, taş);
   
-      div.classList.add("taş");
+      taş.classList.add("taş");
       // const board = document.getElementById("board");
       // board.appendChild(div);
   
-      div.addEventListener("contextmenu", event => {
+      taş.addEventListener("contextmenu", event => {
         // Sağ tıklayınca taş çevirme özelliği:
         event.preventDefault();
         // const değer = event.target.textContent;
         // console.log(değer);
-        div.classList.toggle("gizle");
+        taş.classList.toggle("gizle");
         // taşıÇevir();
       });
+
+      div.appendChild(taş);
   
       // TODO: DOUBLE CLICK İLE TAŞI FIRLAT.
 
@@ -315,6 +426,7 @@ socket.on('your board', function(yours) {
   
   createBoard();
   addElement();
+  boarddaTaşGezdir();
   //TODO: Bağlantı koparsa "connection error" yazdır.
   
   // 1. Elinde hiç okey yok

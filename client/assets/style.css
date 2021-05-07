@@ -29,6 +29,7 @@ body
 
 .board {
   display: grid;
+  flex-wrap: wrap;
   padding: 20px;
   justify-content: center;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -80,6 +81,10 @@ h3 {
 .gelen-taş-yeri,
 .giden-taş-yeri {
   border-style: dashed;
+}
+
+.drag-over {
+  border: dashed 3px red;
 }
 
 .kırmızı {

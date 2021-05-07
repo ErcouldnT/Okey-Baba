@@ -3,9 +3,9 @@ const server = require('http').createServer(app);
 const io = require("socket.io").listen(server);
 const { oyunBaşlat, oyuncuBul } = require('./module');
 
+let onlineOyuncular = new Array; //TODO: 4 kişiden fazla olmamalı!
 let currentPlayer = 1;
 let taşÇek = false;
-let onlineOyuncular = new Array; //TODO: 4 kişiden fazla olmamalı!
 
 io.on('connection', (socket) => {
   const soketID = socket.id;
@@ -25,9 +25,10 @@ io.on('connection', (socket) => {
     console.log(onlineOyuncular);
     io.emit('oyuncular', onlineOyuncular);  //TODO: 4'ten fazla olmamalı!
     // io.emit('client konsol', isim);  // İsim bilgisini herkese gönder.
-    if (onlineOyuncular.length === 4) {
+    if (onlineOyuncular.length === 1) { // TEST AMAÇLI === 1 ELSE 4.
       const [ göstergeTaşı, onlineListe ] = oyunBaşlat(onlineOyuncular);  // Multiple return alma işlemi böyle.
       onlineOyuncular = onlineListe;
+      let currentPlayer = 1;
       let kendiDestesi = function(oyuncu, index) {
         // Hepsini tek obje olarak yolla. Client'ta yakala.
         io.to(oyuncu.id).emit('oyun bilgisi', "Oyun başlıyor...");
