@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
     console.log(onlineOyuncular);
     io.emit('oyuncular', onlineOyuncular);  //TODO: 4'ten fazla olmamalı!
     // io.emit('client konsol', isim);  // İsim bilgisini herkese gönder.
-    if (onlineOyuncular.length === 1) { // TEST AMAÇLI === 1 ELSE 4.
+    if (onlineOyuncular.length === 4) { // TEST AMAÇLI === 1 ELSE 4.
       const [ göstergeTaşı, onlineListe ] = oyunBaşlat(onlineOyuncular);  // Multiple return alma işlemi böyle.
       onlineOyuncular = onlineListe;
       let currentPlayer = 1;
