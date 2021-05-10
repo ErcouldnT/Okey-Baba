@@ -84,17 +84,20 @@ io.on('connection', (socket) => {
   });
 
   socket.on('yeni taş iste', (bilgi) => {
-    // const taş_isteyen_oyuncu = bilgi.player;
     const oyuncuyu_bul = oyuncuBul(soketID, onlineOyuncular);
+    // Yeni taşı oyuncunun destesine eklemeyi unutma.
+    //oyuncuyu_bul[0].destesi.push(yeni_taş); Bu çalışmaz aga 90%.
     var oyuncu_destesi = oyuncuyu_bul[0].destesi;
 
     let yeni_taş = kalan_deste.pop();  // shift() de kullanılabilir.
-    // Yeni taşı oyuncunun destesine eklemeyi unutma.
-    //oyuncuyu_bul[0].destesi.push(yeni_taş); Bu çalışmaz aga 90%.
     io.to(soketID).emit('yeni taş', yeni_taş);
 
     console.log("Kalan yeni taş sayısı: " + kalan_deste.length);
     io.emit('kalan taş sayısı', kalan_deste.length);
+  });
+
+  socket.on('taş çeken oyuncu', (info) => {
+    socket.broadcast.emit('taş çeken oyuncu', info.player);
   });
 
   socket.on('disconnect', () => {

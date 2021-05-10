@@ -1,0 +1,19 @@
+1. player taş çekti:
+  sen player 2 isen id3 sil.
+  player 3 isen id2 sil.
+  player 4 isen id1 sil.
+
+2. player taş çekti:
+  player 1 isen id1 sil.
+  player 3 isen id3 sil.
+  player 4 isen id2 sil.
+
+3. player taş çekti:
+  player 1 isen id2 sil.
+  player 2 isen id1 sil.
+  player 4 isen id3 sil.
+
+4. player taş çekti:
+  player 1 isen id3 sil.
+  player 2 isen id2 sil.
+  player 4 isen id1 sil.

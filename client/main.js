@@ -113,14 +113,6 @@ function çiftTıkOrtaYeniTaşAl(e) {
   };
 };
 
-function ortadanYeniTaşÇek() {
-  // Drop fonksiyonunu ayrı yaz. Gerek yok.
-  const yeni = document.querySelector('.yeni'); // yeniTaşÇek değişkeni kullanılabilir...
-  taşKaymaÖzelliğiVer(yeni);
-};
-
-ortadanYeniTaşÇek();
-
 function taşYarat(taş, id1) {  // Taş'ın bağlı bulunduğu parent div for atılan taşlar.
   var yollanan_taş = document.createElement("div");
   var taş_ismi = document.createTextNode(taş.sayı);
@@ -175,7 +167,7 @@ function drop(e) {
         // Socket'ten gelen taşı oyuncunun gerçek destesine eklemeyi unutma!
         // '{you, sürüklenen taş as CSStoObject}'
         socket.emit('yeni taş iste', {
-          player: you
+          player: you  // Gereksiz...
         });
         e.target.appendChild(sürüklenen);
         // Tekrar taş çekmesini engelle:
@@ -185,14 +177,14 @@ function drop(e) {
     } else if (sürüklenen.parentElement.classList.contains('gelen-taş-yeri')) {
       // Sol taraftaki oyuncunun attığı taşı çek:
       if (you === currentPlayer && taşÇekmeHakkı === true) {
-          // Oyuncu taşı çekince server tarafında handle et.
-          // Diğer oyuncuların div'lerinden taşı sil ve atılan bir önceki taşı göster.
-          e.target.appendChild(sürüklenen);
-          sağTıklaTaşıGizle(sürüklenen);
-        };
+        // !TODO!: Diğer oyuncuların div'lerinden taşı sil ve atılan bir önceki taşı göster.
+        e.target.appendChild(sürüklenen);
+        sağTıklaTaşıGizle(sürüklenen);
         // Tek değişkene indir.
-        taşÇekmeHakkı = false;
-        taşAldıMı = true; // Bunlar birbirinin tersi. İlk oyuncu taş almış sayılsın.
+          taşÇekmeHakkı = false;
+          taşAldıMı = true; // Bunlar birbirinin tersi. İlk oyuncu taş almış sayılsın.
+          socket.emit('taş çeken oyuncu', { player: you });
+        };
       //var taş_boardu = document.querySelectorAll(".board .taş"); 
       // Board'ı son haline güncelle.
     } else if (sürüklenen.classList.contains('taş')
@@ -231,11 +223,10 @@ function taşYollaMekaniği() {
     var gönderilen = document.getElementById(id);
     let taş = taşCSStoOBJECT(gönderilen);
 
-    if (ilkBaşlayan || you === currentPlayer && taşAldıMı) { //Şimdilik taş almasına gerek yok.
+    if (ilkBaşlayan || you === currentPlayer && taşAldıMı) {
       taşAldıMı = false;
       ilkBaşlayan = false;
-      // Testing...
-      console.log(taş);
+      // Client-side validation buraya eklenebilir...
       socket.emit("id0-taş", {
         player: you,
         taş: taş
@@ -326,7 +317,47 @@ function taşRenkÇevirici(taş, divtaş) {  // Spesifik olarak tek bir taşın 
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 // Sockets
+socket.on('taş çeken oyuncu', (player) => {
+  console.log("Taş çeken oyuncu: " + player);
+  //const yer = document.getElementById(`id${player}`);
+  if (player === 1) {
+    if (you === 2) {
+      id3.innerHTML = "";
+    } else if (you === 3) {
+      id2.innerHTML = "";
+    } else if (you === 4) {
+      id1.innerHTML = "";
+    };
+  } else if (player === 2) {
+    if (you === 1) {
+      id1.innerHTML = "";
+    } else if (you === 3) {
+      id3.innerHTML = "";
+    } else if (you === 4) {
+      id2.innerHTML = "";
+    };
+  } else if (player === 3) {
+    if (you === 1) {
+      id2.innerHTML = "";
+    } else if (you === 2) {
+      id1.innerHTML = "";
+    } else if (you === 4) {
+      id3.innerHTML = "";
+    };
+  } else if (player === 4) {
+    if (you === 1) {
+      id3.innerHTML = "";
+    } else if (you === 2) {
+      id2.innerHTML = "";
+    } else if (you === 3) {
+      id1.innerHTML = "";
+    };
+  };
+  // !TODO: Boş kalmasın, bir önceki atılan taşı göstersin.
+});
+
 socket.on('kalan taş sayısı', (sayı) => {
+  // "Taş sayısı bilgisi gelince" yeni orta boş taş oluşturur.
   console.log("Ortadaki yeni taş sayısı: " + sayı);
   //let yeniTaşÇek = document.querySelector('.yeni');
   // Tekrar taş çekme yerine boş taş koy:
@@ -335,12 +366,13 @@ socket.on('kalan taş sayısı', (sayı) => {
   boş_taş.classList.add('taş');
   orta_taş_yeri.innerHTML = "";
   orta_taş_yeri.appendChild(boş_taş);
-  ortadanYeniTaşÇek();
-  boş_taş.textContent = "(" + sayı + ")";
+  taşKaymaÖzelliğiVer(boş_taş);
+  boş_taş.textContent = sayı;
+  //boş_taş.style.color = 'purple'; // !BUG: Board'a gelen taşın da rengi değişiyor.
 });
 
 socket.on('yeni taş', (yenitaş) => {
-  console.log(yenitaş);
+  //console.log(yenitaş);
   let yeniTaşÇek = document.querySelector('.yeni');  // Her yeni taşta baştan seçilmeli!
   yeniTaşÇek.innerHTML = "";
   var taş_ismi = document.createTextNode(yenitaş.sayı);
@@ -499,5 +531,6 @@ socket.on('your board', function(yours) {
   createBoard();
   addElement();
   taşYollaMekaniği();
+  taşKaymaÖzelliğiVer(yeniTaşÇek);
 });
 // !TODO!: Bağlantı koparsa "connection error" yazdır.
