@@ -230,7 +230,7 @@ function taşYollaMekaniği() {
     var gönderilen = document.getElementById(id);
     let taş = taşCSStoOBJECT(gönderilen);
 
-    if (ilkBaşlayan || you === currentPlayer && taşAldıMı) {
+    if (ilkBaşlayan || you === currentPlayer && taşAldıMı && !gönderilen.classList.contains('yeni')) {
       taşAldıMı = false;
       ilkBaşlayan = false;
       // Client-side validation buraya eklenebilir...
