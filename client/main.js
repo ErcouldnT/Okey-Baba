@@ -66,7 +66,13 @@ function taşCSStoOBJECT(div) {
   } else if (isMavi) {
     taş.renk = "Mavi";
   };
-  taş.sayı = div.textContent.match(/\d/g).join(""); //!Bug: Sahte okey.
+  if (div.textContent.match(/\d/g)) {
+    // !TODO!: Ortadan gelen taşta varsa ?????
+    taş.sayı = div.textContent.match(/\d/g).join(""); //!Bug: Sahte okey.
+  } else {
+    taş.isSahteOkey = true;
+    // !TODO: Sahte okey'e değer verici fonksiyon ekle.
+  };
   return taş;
 };
 
@@ -228,7 +234,7 @@ function taşYollaMekaniği() {
       taşAldıMı = false;
       ilkBaşlayan = false;
       // Client-side validation buraya eklenebilir...
-      socket.emit("id0-taş", {
+      socket.emit("yere taş at", {
         player: you,
         taş: taş
       });
@@ -242,7 +248,7 @@ function taşYollaMekaniği() {
     // e.target.appendChild(gönderilen);
     // console.log(gönderilen);
 
-    // socket.emit("id0-taş", {
+    // socket.emit("yere taş at", {
     //   player: you,
     //   taş: element
     // });
@@ -268,7 +274,7 @@ function çiftTıkTaşYolla(event) {
       //id0.textContent = _.last(id0_list).sayı;  // = element.sayı;
       // TODO: Uygun rengi de alsın. Css-sınıfı-seçiciyi function'a çevir, buraya ekle.
 
-      socket.emit("id0-taş", {
+      socket.emit("yere taş at", {
         player: you,
         taş: element
       });
@@ -486,7 +492,8 @@ socket.on('oyun bilgisi', function(bilgi) {
 socket.on('gösterge taşı', function(taş) {
   console.log(taş);
   const göstergeTaşı = taş;
-  // TODO: Desteden göstergeyi kes!
+  // Okey taşı da gelsin, lazım olacak.
+  // TODO: Desteden göstergeyi kes!?
   const divg = document.getElementById("gösterge");
   // First, clear previous classnames:
   //divg.className = "taş";

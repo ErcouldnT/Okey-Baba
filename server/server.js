@@ -48,12 +48,8 @@ io.on('connection', (socket) => {
     };
   });
 
-  socket.on("id0-taş", (element) => {
+  socket.on("yere taş at", (element) => {
     console.log(element);
-    // var öncekiTaş = {
-    //   taşıYollayan: oyuncuSırası,
-    //   taş: element.taş
-    // };
     try {
       // Server-side validation:
       const oyuncuyuBul = oyuncuBul(soketID, onlineOyuncular);
