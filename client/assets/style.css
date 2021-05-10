@@ -79,8 +79,13 @@ h3 {
 }
 
 .gelen-taş-yeri,
-.giden-taş-yeri {
+.giden-taş-yeri,
+.orta-taş-yeri,
+.taş-yeri {
   border-style: dashed;
+  border-radius: 15%;
+  width: 100px;
+  height: 150px;
 }
 
 .drag-over {

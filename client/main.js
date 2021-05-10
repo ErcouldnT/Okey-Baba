@@ -69,23 +69,12 @@ function taşCSStoOBJECT(div) {
 };
 
 function oyuncudanGelenTaşıAl() {
-  // !TODO: Taş çekilme işlemi "drop" anına yazılacak.
-  // Bu kısmın drop kodları ayrı olsun.
-  if (you === currentPlayer && taşÇekmeHakkı === true) {
-    var gelen_taş = document.querySelectorAll(".gelen-taş-yeri > div");
-    gelen_taş.forEach(taş => {
-      let element = taşCSStoOBJECT(taş);
-      taşKaymaÖzelliğiVer(taş, element);
-      // Oyuncu taşı çekince server tarafında handle et.
-      // Diğer oyuncuların div'lerinden taşı sil ve atılan bir önceki taşı göster.
-    });
-    // Drop anında gerçekleşmesi lazım... if'le birlikte.
-    // taşÇekmeHakkı = false;
-    // taşAldıMı = true;
-  };
-  //var taş_boardu = document.querySelectorAll(".board .taş"); // Board'ın son halini al.
+  var gelen_taş = document.querySelectorAll(".gelen-taş-yeri > div");
+  gelen_taş.forEach(taş => {
+    let element = taşCSStoOBJECT(taş);
+    taşKaymaÖzelliğiVer(taş, element);
+  });
 };
-
 
 // Sol taraftaki oyuncunın attığı taşı alma işlemi:
 //id4.addEventListener("dblclick", çiftTıkSolTaraftanTaşAl);
@@ -124,7 +113,7 @@ function çiftTıkOrtaYeniTaşAl(e) {
 };
 
 function ortadanYeniTaşÇek() {
-  // Drop fonksiyonunu ayrı yaz.
+  // Drop fonksiyonunu ayrı yaz. Gerek yok.
   const yeni = document.querySelector('.yeni');
   taşKaymaÖzelliğiVer(yeni);
 };
@@ -177,8 +166,34 @@ function drop(e) {
   if (!yeniyer.firstChild) {
     const id = e.dataTransfer.getData('text/plain');
     var sürüklenen = document.getElementById(id);
-    e.target.appendChild(sürüklenen);
-    //sürüklenen.classList.remove('yoket');  // Drag event'i bittiğinde yapıyor zaten.
+    if (sürüklenen.classList.contains('yeni')) {
+      if (you === currentPlayer && taşÇekmeHakkı === true) {
+        console.log("Ortadan yeni taş çekildi."); // 'socket to deste'den taş iste.
+        // Socket'ten gelen taşı oyuncunun gerçek destesine eklemeyi unutma!
+        // !TODO: Some logic.
+        // socket.emit '{you, sürüklenen taş as CSStoObject}'
+        e.target.appendChild(sürüklenen);
+        // Tekrar taş çekmesini engelle:
+        taşÇekmeHakkı = false;
+        taşAldıMı = true;
+      };
+    } else if (sürüklenen.parentElement.classList.contains('gelen-taş-yeri')) {
+      if (you === currentPlayer && taşÇekmeHakkı === true) {
+          // Oyuncu taşı çekince server tarafında handle et.
+          // Diğer oyuncuların div'lerinden taşı sil ve atılan bir önceki taşı göster.
+        e.target.appendChild(sürüklenen);
+        };
+        // Tek değişkene indir.
+        taşÇekmeHakkı = false;
+        taşAldıMı = true; // Bunlar birbirinin tersi. İlk oyuncu taş almış sayılsın.
+      //var taş_boardu = document.querySelectorAll(".board .taş"); 
+      // Board'ı son haline güncelle.
+    } else if (sürüklenen.classList.contains('taş')
+    && !sürüklenen.classList.contains('yeni')
+    && !sürüklenen.classList.contains('gelen-taş-yeri')) {
+      e.target.appendChild(sürüklenen);
+      //sürüklenen.classList.remove('yoket');  // Drag event'i bittiğinde yapıyor zaten.
+    };
   };
   //sürüklenen.removeAttribute('id');
 };
@@ -208,7 +223,7 @@ function taşYollaMekaniği() {
     var gönderilen = document.getElementById(id);
     let taş = taşCSStoOBJECT(gönderilen);
 
-    if (ilkBaşlayan || you === currentPlayer && !taşAldıMı) { //Şimdilik taş almasına gerek yok.
+    if (ilkBaşlayan || you === currentPlayer && taşAldıMı) { //Şimdilik taş almasına gerek yok.
       taşAldıMı = false;
       ilkBaşlayan = false;
       // Testing...

@@ -15,11 +15,12 @@ The nightly coded Online Java Script Okey Game, Rummikub your grandparents warne
 * *Basic game logic*
   * ~First player have 1 more extra tile to start game.~
   * ~Sending a tile for next player.~
-  * Taking rummy tile to your board.
+  * ~Taking rummy tile to your board.~
     * [x] From left-side player.
-    * [ ] From middle deck.
+    * [x] From middle deck.
   * Show all players (and points) on the screen.
   * Show counter for middle tiles left.
+  * Check board on changes.
   * Live chat.
 * *Advanced*
   * Handle game on player disconnect (MongoDB).
