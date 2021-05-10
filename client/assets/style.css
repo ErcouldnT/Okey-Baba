@@ -126,6 +126,15 @@ h3 {
   align-content: center;
 }
 
+.player-4 {
+  position: relative;
+  right: 50%;
+}
+.player-2 {
+  position: relative;
+  left: 50%;
+}
+
 .con-2 {
   width: 100%;
   display: flex;

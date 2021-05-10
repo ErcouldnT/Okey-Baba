@@ -15,6 +15,10 @@ const id2 = document.getElementById("id-2");
 const id3 = document.getElementById("id-3");
 const id4 = document.getElementById("id-4");
 var orta_taş_yeri = document.querySelector('.orta-taş-yeri');
+var ıstaka_ismi = document.querySelector('.ıstaka');
+var player2 = document.querySelector('.player-2');
+var player3 = document.querySelector('.player-3');
+var player4 = document.querySelector('.player-4');
 
 // Variables
 let taşSimge = "❤";
@@ -23,6 +27,7 @@ let taşÇekmeHakkı = false;
 let ilkBaşlayan = false;
 let taşAldıMı = false;
 let list_of_gamers = [];
+let you;
 
 // Event listeners
 form.addEventListener('submit', function(e) {
@@ -35,6 +40,26 @@ form.addEventListener('submit', function(e) {
 });
 
 // Functions
+function oyuncuİsimleriniGetir(liste) {
+  if (you === 1) {
+    player2.textContent = liste[1].adı + " (20)";
+    player3.textContent = liste[2].adı + " (20)";
+    player4.textContent = liste[3].adı + " (20)";
+  } else if (you === 2) {
+    player2.textContent = liste[2].adı + " (20)";
+    player3.textContent = liste[3].adı + " (20)";
+    player4.textContent = liste[0].adı + " (20)";
+  } else if (you === 3) {
+    player2.textContent = liste[3].adı + " (20)";
+    player3.textContent = liste[0].adı + " (20)";
+    player4.textContent = liste[1].adı + " (20)";
+  } else if (you === 4) {
+    player2.textContent = liste[0].adı + " (20)";
+    player3.textContent = liste[1].adı + " (20)";
+    player4.textContent = liste[2].adı + " (20)";
+  };
+};
+
 function taşKaymaÖzelliğiVer(taş, element) {
   // taş: 'div', element: '{renk, sayı}'
   taş.setAttribute('draggable', true);
@@ -230,15 +255,17 @@ function taşYollaMekaniği() {
     var gönderilen = document.getElementById(id);
     let taş = taşCSStoOBJECT(gönderilen);
 
-    if (ilkBaşlayan || you === currentPlayer && taşAldıMı && !gönderilen.classList.contains('yeni')) {
-      taşAldıMı = false;
-      ilkBaşlayan = false;
-      // Client-side validation buraya eklenebilir...
-      socket.emit("yere taş at", {
-        player: you,
-        taş: taş
-      });
-      gönderilen.remove();
+    if (ilkBaşlayan || you === currentPlayer && taşAldıMı) {
+      if (!gönderilen.classList.contains('yeni')) {
+        taşAldıMı = false;
+        ilkBaşlayan = false;
+        // Client-side validation buraya eklenebilir...
+        socket.emit("yere taş at", {
+          player: you,
+          taş: taş
+        });
+        gönderilen.remove();
+      };
     };
 
     // Bunların yerine taşı server'a gönder:
@@ -394,11 +421,14 @@ socket.on('yeni taş', (yenitaş) => {
 });
 
 socket.on('player', function(player) {
-  // Oyun başladığı anda tetiklenir.
+  // "Sadece" oyun başladığı anda tetiklenir.
   currentPlayer = player.current;
   you = player.you;
   ilkBaşlayan = player.ilkBaşlar;
   okey = player.okeytaşı;
+  ıstaka_ismi.textContent = list_of_gamers[you - 1].adı + " (20)"; // Hard-coded points for now.
+  oyuncuİsimleriniGetir(list_of_gamers);
+  console.log(list_of_gamers);
   if (ilkBaşlayan) {
     infoMessage.textContent = "Oyuna sen başlıyorsun."
     // Sadece taş transferini kontrol eden bir socket açılabilir. 'Deste to oyuncu' arası.
@@ -407,6 +437,7 @@ socket.on('player', function(player) {
   };
   console.log("current: " + currentPlayer + ", " + "you: " + you);
 });
+
 
 socket.on('current player', function(info) {
   // Bu socket taş atıldığında tetiklenir.
