@@ -326,9 +326,23 @@ function taşRenkÇevirici(taş, divtaş) {  // Spesifik olarak tek bir taşın 
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 // Sockets
+socket.on('kalan taş sayısı', (sayı) => {
+  console.log("Ortadaki yeni taş sayısı: " + sayı);
+  //let yeniTaşÇek = document.querySelector('.yeni');
+  // Tekrar taş çekme yerine boş taş koy:
+  const boş_taş = document.createElement('div');
+  boş_taş.classList.add('yeni');
+  boş_taş.classList.add('taş');
+  orta_taş_yeri.innerHTML = "";
+  orta_taş_yeri.appendChild(boş_taş);
+  ortadanYeniTaşÇek();
+  boş_taş.textContent = "(" + sayı + ")";
+});
+
 socket.on('yeni taş', (yenitaş) => {
   console.log(yenitaş);
   let yeniTaşÇek = document.querySelector('.yeni');  // Her yeni taşta baştan seçilmeli!
+  yeniTaşÇek.innerHTML = "";
   var taş_ismi = document.createTextNode(yenitaş.sayı);
   yeniTaşÇek.appendChild(taş_ismi);
   taşRenkÇevirici(yenitaş, yeniTaşÇek);
@@ -337,13 +351,7 @@ socket.on('yeni taş', (yenitaş) => {
   // Taşları kaydır.
   taşKaymaÖzelliğiVer(yeniTaşÇek, yenitaş);
   sağTıklaTaşıGizle(yeniTaşÇek);
-  // Tekrar taş çekme yerine boş taş koy:
-  const boş_taş = document.createElement('div');
-  boş_taş.classList.add('yeni');
-  boş_taş.classList.add('taş');
-  orta_taş_yeri.appendChild(boş_taş);
-  //let yeniTaşÇek = boş_taş;
-  ortadanYeniTaşÇek();
+  // let yeniTaşÇek = boş_taş; kullanılabilir...
 });
 
 socket.on('player', function(player) {

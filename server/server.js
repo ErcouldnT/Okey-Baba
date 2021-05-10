@@ -94,7 +94,7 @@ io.on('connection', (socket) => {
     io.to(soketID).emit('yeni taş', yeni_taş);
 
     console.log("Kalan yeni taş sayısı: " + kalan_deste.length);
-    socket.emit('kalan taş sayısı', kalan_deste.length);
+    io.emit('kalan taş sayısı', kalan_deste.length);
   });
 
   socket.on('disconnect', () => {

@@ -19,7 +19,7 @@ The nightly coded Online Java Script Okey Game, Rummikub your grandparents warne
     * [x] From left-side player.
     * [x] From middle deck.
   * Show all players (and points) on the screen.
-  * Show counter for middle tiles left.
+  * ~Show counter for middle tiles left.~
   * Check board on changes.
   * Live chat.
 * *Advanced*
