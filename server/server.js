@@ -6,6 +6,7 @@ const { oyunBaşlat, oyuncuBul } = require('./module');
 let onlineOyuncular = new Array; //TODO: 4 kişiden fazla olmamalı!
 let currentPlayer = 1;
 let taşÇek = false;
+let kalan_deste = [];
 
 io.on('connection', (socket) => {
   const soketID = socket.id;
@@ -25,9 +26,10 @@ io.on('connection', (socket) => {
     console.log(onlineOyuncular);
     io.emit('oyuncular', onlineOyuncular);  //TODO: 4'ten fazla olmamalı!
     // io.emit('client konsol', isim);  // İsim bilgisini herkese gönder.
-    if (onlineOyuncular.length === 2) { // TEST AMAÇLI === 1 ELSE 4.
-      const [ göstergeTaşı, onlineListe ] = oyunBaşlat(onlineOyuncular);  // Multiple return alma işlemi böyle.
+    if (onlineOyuncular.length === 4) { // TEST AMAÇLI === 1 ELSE 4.
+      const [ göstergeTaşı, onlineListe, remaining_deck ] = oyunBaşlat(onlineOyuncular);  // Multiple return alma işlemi böyle.
       onlineOyuncular = onlineListe;
+      kalan_deste = remaining_deck;
       let currentPlayer = 1;
       let kendiDestesi = function(oyuncu, index) {
         // Hepsini tek obje olarak yolla. Client'ta yakala.
@@ -79,6 +81,20 @@ io.on('connection', (socket) => {
       // let id2_list = new Array;
       // let id3_list = new Array;
     };
+  });
+
+  socket.on('yeni taş iste', (bilgi) => {
+    // const taş_isteyen_oyuncu = bilgi.player;
+    const oyuncuyu_bul = oyuncuBul(soketID, onlineOyuncular);
+    var oyuncu_destesi = oyuncuyu_bul[0].destesi;
+
+    let yeni_taş = kalan_deste.pop();  // shift() de kullanılabilir.
+    // Yeni taşı oyuncunun destesine eklemeyi unutma.
+    //oyuncuyu_bul[0].destesi.push(yeni_taş); Bu çalışmaz aga 90%.
+    io.to(soketID).emit('yeni taş', yeni_taş);
+
+    console.log("Kalan yeni taş sayısı: " + kalan_deste.length);
+    socket.emit('kalan taş sayısı', kalan_deste.length);
   });
 
   socket.on('disconnect', () => {

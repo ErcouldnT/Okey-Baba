@@ -14,6 +14,7 @@ const id1 = document.getElementById("id-1");
 const id2 = document.getElementById("id-2");
 const id3 = document.getElementById("id-3");
 const id4 = document.getElementById("id-4");
+var orta_taş_yeri = document.querySelector('.orta-taş-yeri');
 
 // Variables
 let taşSimge = "❤";
@@ -114,7 +115,7 @@ function çiftTıkOrtaYeniTaşAl(e) {
 
 function ortadanYeniTaşÇek() {
   // Drop fonksiyonunu ayrı yaz. Gerek yok.
-  const yeni = document.querySelector('.yeni');
+  const yeni = document.querySelector('.yeni'); // yeniTaşÇek değişkeni kullanılabilir...
   taşKaymaÖzelliğiVer(yeni);
 };
 
@@ -167,17 +168,21 @@ function drop(e) {
     const id = e.dataTransfer.getData('text/plain');
     var sürüklenen = document.getElementById(id);
     if (sürüklenen.classList.contains('yeni')) {
+      // Ortadan yeni taş çek:
       if (you === currentPlayer && taşÇekmeHakkı === true) {
-        console.log("Ortadan yeni taş çekildi."); // 'socket to deste'den taş iste.
+        console.log("Ortadan yeni taş çekildi.");
         // Socket'ten gelen taşı oyuncunun gerçek destesine eklemeyi unutma!
-        // !TODO: Some logic.
-        // socket.emit '{you, sürüklenen taş as CSStoObject}'
+        // '{you, sürüklenen taş as CSStoObject}'
+        socket.emit('yeni taş iste', {
+          player: you
+        });
         e.target.appendChild(sürüklenen);
         // Tekrar taş çekmesini engelle:
         taşÇekmeHakkı = false;
         taşAldıMı = true;
       };
     } else if (sürüklenen.parentElement.classList.contains('gelen-taş-yeri')) {
+      // Sol taraftaki oyuncunun attığı taşı çek:
       if (you === currentPlayer && taşÇekmeHakkı === true) {
           // Oyuncu taşı çekince server tarafında handle et.
           // Diğer oyuncuların div'lerinden taşı sil ve atılan bir önceki taşı göster.
@@ -189,6 +194,7 @@ function drop(e) {
       //var taş_boardu = document.querySelectorAll(".board .taş"); 
       // Board'ı son haline güncelle.
     } else if (sürüklenen.classList.contains('taş')
+    // Board'da taş gezdir:
     && !sürüklenen.classList.contains('yeni')
     && !sürüklenen.classList.contains('gelen-taş-yeri')) {
       e.target.appendChild(sürüklenen);
@@ -318,6 +324,22 @@ function taşRenkÇevirici(taş, divtaş) {  // Spesifik olarak tek bir taşın 
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 // Sockets
+socket.on('yeni taş', (yenitaş) => {
+  console.log(yenitaş);
+  let yeniTaşÇek = document.querySelector('.yeni');  // Her yeni taşta baştan seçilmeli!
+  var taş_ismi = document.createTextNode(yenitaş.sayı);
+  yeniTaşÇek.appendChild(taş_ismi);
+  taşRenkÇevirici(yenitaş, yeniTaşÇek);
+  taşKaymaÖzelliğiVer(yeniTaşÇek, yenitaş);
+  // Tekrar taş çekme yerine boş taş koy:
+  const boş_taş = document.createElement('div');
+  boş_taş.classList.add('yeni');
+  boş_taş.classList.add('taş');
+  orta_taş_yeri.appendChild(boş_taş);
+  //let yeniTaşÇek = boş_taş;
+  ortadanYeniTaşÇek();
+});
+
 socket.on('player', function(player) {
   // Oyun başladığı anda tetiklenir.
   currentPlayer = player.current;
