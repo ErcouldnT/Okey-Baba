@@ -186,7 +186,8 @@ function drop(e) {
       if (you === currentPlayer && taşÇekmeHakkı === true) {
           // Oyuncu taşı çekince server tarafında handle et.
           // Diğer oyuncuların div'lerinden taşı sil ve atılan bir önceki taşı göster.
-        e.target.appendChild(sürüklenen);
+          e.target.appendChild(sürüklenen);
+          sağTıklaTaşıGizle(sürüklenen);
         };
         // Tek değişkene indir.
         taşÇekmeHakkı = false;
@@ -330,7 +331,11 @@ socket.on('yeni taş', (yenitaş) => {
   var taş_ismi = document.createTextNode(yenitaş.sayı);
   yeniTaşÇek.appendChild(taş_ismi);
   taşRenkÇevirici(yenitaş, yeniTaşÇek);
+  // Board güncelleme fonk. ekleyerek taşları güncelle.
+  // Sağ tık ile taş gizle.
+  // Taşları kaydır.
   taşKaymaÖzelliğiVer(yeniTaşÇek, yenitaş);
+  sağTıklaTaşıGizle(yeniTaşÇek);
   // Tekrar taş çekme yerine boş taş koy:
   const boş_taş = document.createElement('div');
   boş_taş.classList.add('yeni');
