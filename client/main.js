@@ -67,11 +67,11 @@ function taşCSStoOBJECT(div) {
     taş.renk = "Mavi";
   };
   if (div.textContent.match(/\d/g)) {
-    // !TODO!: Ortadan gelen taşta varsa ?????
     taş.sayı = div.textContent.match(/\d/g).join(""); //!Bug: Sahte okey.
   } else {
+    taş.renk = okey.renk;
+    taş.sayı = okey.sayı;
     taş.isSahteOkey = true;
-    // !TODO: Sahte okey'e değer verici fonksiyon ekle.
   };
   return taş;
 };
@@ -398,6 +398,7 @@ socket.on('player', function(player) {
   currentPlayer = player.current;
   you = player.you;
   ilkBaşlayan = player.ilkBaşlar;
+  okey = player.okeytaşı;
   if (ilkBaşlayan) {
     infoMessage.textContent = "Oyuna sen başlıyorsun."
     // Sadece taş transferini kontrol eden bir socket açılabilir. 'Deste to oyuncu' arası.

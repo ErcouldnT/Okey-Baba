@@ -27,9 +27,10 @@ io.on('connection', (socket) => {
     io.emit('oyuncular', onlineOyuncular);  //TODO: 4'ten fazla olmamalı!
     // io.emit('client konsol', isim);  // İsim bilgisini herkese gönder.
     if (onlineOyuncular.length === 4) { // TEST AMAÇLI === 1 ELSE 4.
-      const [ göstergeTaşı, onlineListe, remaining_deck ] = oyunBaşlat(onlineOyuncular);  // Multiple return alma işlemi böyle.
+      const [ okeytaşı, göstergeTaşı, onlineListe, remaining_deck ] = oyunBaşlat(onlineOyuncular);  // Multiple return alma işlemi böyle.
       onlineOyuncular = onlineListe;
       kalan_deste = remaining_deck;
+      okey = okeytaşı;
       let currentPlayer = 1;
       let kendiDestesi = function(oyuncu, index) {
         // Hepsini tek obje olarak yolla. Client'ta yakala.
@@ -39,10 +40,9 @@ io.on('connection', (socket) => {
         io.to(oyuncu.id).emit('player', {
           current: currentPlayer, 
           you: onlineOyuncular[index].player,
-          ilkBaşlar: oyuncu.isFirstPlayer
-          // yourDeck + Gösterge falan tek seferde buradan gönderilebilir.
+          ilkBaşlar: oyuncu.isFirstPlayer,
+          okeytaşı: okey,
         });
-        // console.log(index + ' : ' + element + ' - ' + array[index])
       };
       onlineOyuncular.forEach(kendiDestesi);
     };

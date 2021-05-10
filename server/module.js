@@ -98,7 +98,7 @@ function oyunBaşlat(onlineListe) {
   };
   
   console.log("Ortadaki taş sayısı: " + deste.length); //!TODO: İşte bu soketle gönderilecek.
-  return [göstergeTaşı, onlineListe, deste];
+  return [okeytaşı, göstergeTaşı, onlineListe, deste];
 };
 
 function oyuncuBul(soketID, onlineListe) {
