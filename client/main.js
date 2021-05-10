@@ -22,6 +22,7 @@ let sahteOkeySimge = "♣";
 let taşÇekmeHakkı = false;
 let ilkBaşlayan = false;
 let taşAldıMı = false;
+let list_of_gamers = [];
 
 // Event listeners
 form.addEventListener('submit', function(e) {
@@ -395,7 +396,7 @@ socket.on('player', function(player) {
     infoMessage.textContent = "Oyuna sen başlıyorsun."
     // Sadece taş transferini kontrol eden bir socket açılabilir. 'Deste to oyuncu' arası.
   } else {
-    infoMessage.textContent = "1 nolu oyuncu bekleniyor."
+    infoMessage.textContent = list_of_gamers[0] + " isimli oyuncu bekleniyor.";
   };
   console.log("current: " + currentPlayer + ", " + "you: " + you);
 });
@@ -408,7 +409,7 @@ socket.on('current player', function(info) {
   if (currentPlayer === you) {
     infoMessage.textContent = "Sıra sende."
   } else {
-    infoMessage.textContent = `${currentPlayer} nolu oyuncu bekleniyor.`
+    infoMessage.textContent = list_of_gamers[currentPlayer - 1] + " isimli oyuncu bekleniyor.";
   };
 });
 
@@ -466,10 +467,11 @@ socket.on('oyuncular', function(msg) {
       oyuncuListesi.style.display = 'none';
     } else {
       oyuncuBekleniyor.textContent = `Online Oyuncular: (${msg.length}/4)`
-    }
+    };
     // console.log(element.adı);
     const node = document.createElement("div");
     var textnode = document.createTextNode(element.adı);
+    list_of_gamers.push(element.adı);
     node.appendChild(textnode);
     oyuncuListesi.appendChild(node);
   });
