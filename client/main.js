@@ -396,7 +396,7 @@ socket.on('player', function(player) {
     infoMessage.textContent = "Oyuna sen başlıyorsun."
     // Sadece taş transferini kontrol eden bir socket açılabilir. 'Deste to oyuncu' arası.
   } else {
-    infoMessage.textContent = list_of_gamers[0] + " isimli oyuncu bekleniyor.";
+    infoMessage.textContent = list_of_gamers[0].adı + " isimli oyuncu bekleniyor.";
   };
   console.log("current: " + currentPlayer + ", " + "you: " + you);
 });
@@ -409,7 +409,7 @@ socket.on('current player', function(info) {
   if (currentPlayer === you) {
     infoMessage.textContent = "Sıra sende."
   } else {
-    infoMessage.textContent = list_of_gamers[currentPlayer - 1] + " isimli oyuncu bekleniyor.";
+    infoMessage.textContent = list_of_gamers[currentPlayer - 1].adı + " isimli oyuncu bekleniyor.";
   };
 });
 
@@ -455,6 +455,7 @@ socket.on('client konsol', function(msg) {
 });
 
 socket.on('oyuncular', function(msg) {
+  list_of_gamers = msg;
   if (msg.length === 0) {
     onlineListe.classList.add("yoket");
   } else {
@@ -471,7 +472,6 @@ socket.on('oyuncular', function(msg) {
     // console.log(element.adı);
     const node = document.createElement("div");
     var textnode = document.createTextNode(element.adı);
-    list_of_gamers.push(element.adı);
     node.appendChild(textnode);
     oyuncuListesi.appendChild(node);
   });
