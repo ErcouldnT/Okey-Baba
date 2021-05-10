@@ -121,10 +121,11 @@ function ortadanYeniTaşÇek() {
 
 ortadanYeniTaşÇek();
 
-function taşYarat(taş, id1) {  // Taş'ın bağlı bulunduğu parent div.
+function taşYarat(taş, id1) {  // Taş'ın bağlı bulunduğu parent div for atılan taşlar.
   var yollanan_taş = document.createElement("div");
   var taş_ismi = document.createTextNode(taş.sayı);
   yollanan_taş.appendChild(taş_ismi);
+  id1.innerHTML = "";  // Sadece tek bir taş gösterir.
   id1.appendChild(yollanan_taş);
   return yollanan_taş;
 };
