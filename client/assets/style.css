@@ -8,7 +8,7 @@
 }
 body
 {
-  background: white;
+  background: orange;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

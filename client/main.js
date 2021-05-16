@@ -428,7 +428,7 @@ socket.on('player', function(player) {
   okey = player.okeytaşı;
   ıstaka_ismi.textContent = list_of_gamers[you - 1].adı + " (20)"; // Hard-coded points for now.
   oyuncuİsimleriniGetir(list_of_gamers);
-  console.log(list_of_gamers);
+  //console.log(list_of_gamers);
   if (ilkBaşlayan) {
     infoMessage.textContent = "Oyuna sen başlıyorsun."
     // Sadece taş transferini kontrol eden bir socket açılabilir. 'Deste to oyuncu' arası.
@@ -437,7 +437,6 @@ socket.on('player', function(player) {
   };
   console.log("current: " + currentPlayer + ", " + "you: " + you);
 });
-
 
 socket.on('current player', function(info) {
   // Bu socket taş atıldığında tetiklenir.

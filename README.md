@@ -3,7 +3,7 @@ The nightly coded Online Java Script Okey Game, Rummikub your grandparents warne
 
 *Okey baba is a game playing with 4 players. There is a deck includes total amount of 106 tiles which has 1 to 13 numbers, 4 diff colors and 2 jokers in it. Every player has 13 random cards. Players get and give one piece each round and the game continues counterclockwise. The goal is finishing the game once sort your tiles appropriately.*
 
-![The game board](/public/table.png "The game board")
+![The game board](/public/newdash.png "The game board")
 
 ## Setup
 > `npm i`
@@ -50,7 +50,7 @@ The nightly coded Online Java Script Okey Game, Rummikub your grandparents warne
   * Game-bot for disconnected players at different difficulty levels.
 
 ## Link to recent app
-> https://okeybaba.herokuapp.com \
+> https://okey.erkuttekoglu.com \
 > *Note that it's a free dyno so wait a bit.*
 
 &copy; 2021 Erkut
