@@ -50,6 +50,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on("yere taş at", (element) => {
+    //!BUG: 2. maç başlarken taş atılmıyor. Server restart gerekli.
     console.log(element);
     try {
       // Server-side validation:
@@ -95,6 +96,12 @@ io.on('connection', (socket) => {
 
   socket.on('taş çeken oyuncu', (info) => {
     socket.broadcast.emit('taş çeken oyuncu', info.player);
+  });
+
+  socket.on('el bitti', (bitiren_el) => {
+    // Validate it, then
+    io.emit('bitti', bitiren_el);
+    // $player, $board, $son_taş
   });
 
   socket.on('disconnect', () => {

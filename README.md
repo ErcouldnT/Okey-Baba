@@ -20,15 +20,15 @@ The nightly coded Online Java Script Okey Game, Rummikub your grandparents warne
     * [x] From middle deck.
   * ~Show all players (and points) on the screen.~
   * ~Show counter for middle tiles left.~
-  * Logic for simple game ending.
-  * Check board on changes.
-  * Live chat.
+  * ~Logic for simple game ending.~
+  * Game loop (Every round next player starting).
 * *Advanced*
+  * Live chat.
   * Handle game on player disconnect (MongoDB).
   * Point management.
   * ~Playing indicator tile at the 1st round logic.~
   * Client-side and Server-side validations.
-    * [ ] Player deck.
+    * [ ] Player board.
     * [ ] Middle deck.
     * [ ] Discarded tiles.
     * [ ] Game endings.
@@ -48,6 +48,7 @@ The nightly coded Online Java Script Okey Game, Rummikub your grandparents warne
     * [ ] Mobile friendly.
   * Make it clean code (and also English spells).
   * Game-bot for disconnected players at different difficulty levels.
+  * Display logger.
 
 ## Link to recent app
 > https://okey.erkuttekoglu.com \

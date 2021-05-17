@@ -23,10 +23,10 @@ function göstergeDrop(e) {
   const id = e.dataTransfer.getData('text/plain');
   var sürüklenen = document.getElementById(id);
   const element = taşCSStoOBJECT(sürüklenen);
-  if (currentPlayer === you && round === 1 && !taşAldıMı && !gösterge_yaptı
+  if (currentPlayer === you && turn === 1 && !taşAldıMı && !gösterge_yaptı
     && element.renk === göstergeTaşı.renk && element.sayı === göstergeTaşı.sayı) {
-    // !TODO: Round sayısı server'dan gelecek.
-    // Round 1'de herkes sırası gelmeden gösterge yapabilmeli...
+    // !TODO: Turn sayısı server'dan gelecek.
+    // Turn 1'de herkes sırası gelmeden gösterge yapabilmeli...
     console.log("Gösterge atıldı: " + element.renk + " " + element.sayı);
     // Socket aç, diğer oyunculara haber ver.
     // !TODO: Diğer oyuncuların puanı azaltılacak.
@@ -46,6 +46,43 @@ const id2 = document.getElementById("id-2");
 const id3 = document.getElementById("id-3");
 const id4 = document.getElementById("id-4");
 var orta_taş_yeri = document.querySelector('.orta-taş-yeri');
+orta_taş_yeri.addEventListener('dragenter', bitirmeEnter);
+orta_taş_yeri.addEventListener('dragover', bitirmeOver);
+orta_taş_yeri.addEventListener('dragleave', bitirmeLeave);
+orta_taş_yeri.addEventListener('drop', bitirmeDrop);
+
+function bitirmeEnter(e) {
+  e.preventDefault();
+};
+function bitirmeOver(e) {
+  e.preventDefault();
+};
+function bitirmeLeave(e) {
+  e.preventDefault();
+};
+function bitirmeDrop(e) {
+  e.preventDefault();
+  const id = e.dataTransfer.getData('text/plain');
+  var sürüklenen = document.getElementById(id);
+  const bitirme_taşı = taşCSStoOBJECT(sürüklenen);  // Bu fonksiyona okey'i de ekle.
+  let ending_stones = [];
+  if (currentPlayer === you && taşAldıMı) {
+    console.log("Oyun bitirme taşı atıldı: " + bitirme_taşı.renk + " " + bitirme_taşı.sayı);
+    // Validation ekle.
+    var bitiren_oyuncunun_eli = document.querySelectorAll('.board > div');
+    for (let i = 0; i < bitiren_oyuncunun_eli.length; i++) {
+      let div = bitiren_oyuncunun_eli[i];
+      //console.log(div);
+      let taş_adı = taşCSStoOBJECT(div.firstChild);
+      ending_stones.push(taş_adı);
+    };
+    //console.log(bitiren_oyuncunun_eli);
+    socket.emit('el bitti', { player: you, board: ending_stones, son_taş: bitirme_taşı });
+    // Diğer oyuncuların puanı azaltılacak.
+    // gameActive = false;
+  };
+};
+
 var ıstaka_ismi = document.querySelector('.ıstaka');
 var player2 = document.querySelector('.player-2');
 var player3 = document.querySelector('.player-3');
@@ -59,7 +96,7 @@ let ilkBaşlayan = false;
 let taşAldıMı = false;
 let list_of_gamers = [];
 let you;
-let round = 0;
+let turn = 0;
 let göstergeTaşı;
 let gösterge_yaptı = false;
 
@@ -109,30 +146,34 @@ function taşKaymaÖzelliğiVer(taş, element) {
 };
 
 function taşCSStoOBJECT(div) {
-  // taş = {renk: "Mavi", sayı: "1"}
-  let taş = {};
-  // renk class'tan + sayı textContent (regex) + validate.
-  const isSarı = div.classList.contains('sarı');
-  const isKırmızı = div.classList.contains('kırmızı');
-  const isSiyah = div.classList.contains('siyah');
-  const isMavi = div.classList.contains('mavi');
-  if (isSarı) {
-    taş.renk = "Sarı";
-  } else if (isKırmızı) {
-    taş.renk = "Kırmızı";
-  } else if (isSiyah) {
-    taş.renk = "Siyah";
-  } else if (isMavi) {
-    taş.renk = "Mavi";
+  try {
+    // taş = {renk: "Mavi", sayı: "1"}
+    let taş = {};
+    // renk class'tan + sayı textContent (regex) + validate.
+    const isSarı = div.classList.contains('sarı');
+    const isKırmızı = div.classList.contains('kırmızı');
+    const isSiyah = div.classList.contains('siyah');
+    const isMavi = div.classList.contains('mavi');
+    if (isSarı) {
+      taş.renk = "Sarı";
+    } else if (isKırmızı) {
+      taş.renk = "Kırmızı";
+    } else if (isSiyah) {
+      taş.renk = "Siyah";
+    } else if (isMavi) {
+      taş.renk = "Mavi";
+    };
+    if (div.textContent.match(/\d/g)) {
+      taş.sayı = div.textContent.match(/\d/g).join(""); //!Bug: Sahte okey.
+    } else {
+      taş.renk = okey.renk;
+      taş.sayı = okey.sayı;
+      taş.isSahteOkey = true;
+    };
+    return taş;
+  } catch (error) {
+    return null;
   };
-  if (div.textContent.match(/\d/g)) {
-    taş.sayı = div.textContent.match(/\d/g).join(""); //!Bug: Sahte okey.
-  } else {
-    taş.renk = okey.renk;
-    taş.sayı = okey.sayı;
-    taş.isSahteOkey = true;
-  };
-  return taş;
 };
 
 function oyuncudanGelenTaşıAl() {
@@ -385,6 +426,36 @@ function taşRenkÇevirici(taş, divtaş) {  // Spesifik olarak tek bir taşın 
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 // Sockets
+socket.on('bitti', (maç_bitiren) => {
+  // $player, $board, $son_taş
+  if (maç_bitiren.son_taş.isSahteOkey) {
+    var son_atılan = "Sahte okey";
+  } else {
+    var son_atılan = maç_bitiren.son_taş.renk + " " + maç_bitiren.son_taş.sayı;
+  };
+  var biten_board = maç_bitiren.board;
+  //console.log(biten_board);
+  console.log(list_of_gamers[maç_bitiren.player - 1].adı + ", '" + son_atılan + "' ile bitirdi.");
+  // Hangi taş ile bittiğini de göster.
+
+  var bitti_div = document.querySelector('.bitti');
+  for (let i = 0; i < biten_board.length; i++) {
+    let taş = biten_board[i];
+    if (taş) {
+      var yollanan_taş = document.createElement("div");
+      var taş_ismi = document.createTextNode(taş.sayı);
+      yollanan_taş.appendChild(taş_ismi);
+      taşRenkÇevirici(taş, yollanan_taş);
+      bitti_div.appendChild(yollanan_taş);
+    } else {
+      bitti_div.appendChild(document.createElement("div"));
+    };
+  };
+  // Yeni oyun başlayınca bunu tekrar kapat.
+  document.querySelector('.message').textContent = list_of_gamers[maç_bitiren.player - 1].adı + ", '" + son_atılan + "' ile bitirdi.";
+  document.querySelector('.con-3').classList.remove('yoket');
+});
+
 socket.on('taş çeken oyuncu', (player) => {
   console.log("Taş çeken oyuncu: " + player);
   //const yer = document.getElementById(`id${player}`);
@@ -461,8 +532,8 @@ socket.on('player', function(player) {
   ilkBaşlayan = player.ilkBaşlar;
   okey = player.okeytaşı;
   if (currentPlayer === you) {
-    round += 1;
-    console.log("Round: " + round);
+    turn += 1;
+    console.log("Turn: " + turn); // Turn bilgisi oyun başladığında server'dan gelsin.
   };
   ıstaka_ismi.textContent = list_of_gamers[you - 1].adı + " (20)"; // Hard-coded points for now.
   oyuncuİsimleriniGetir(list_of_gamers);
@@ -482,8 +553,8 @@ socket.on('current player', function(info) {
   taşÇekmeHakkı = info.taşHakkı;
   console.log("current: " + currentPlayer + ", " + "you: " + you);
   if (currentPlayer === you) {
-    round += 1;
-    console.log("Round: " + round);
+    turn += 1;
+    console.log("Turn: " + turn); // Turn bilgisi oyun başladığında server'dan gelsin.
     infoMessage.textContent = "Sıra sende."
   } else {
     infoMessage.textContent = list_of_gamers[currentPlayer - 1].adı + " isimli oyuncu bekleniyor.";
