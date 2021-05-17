@@ -20,22 +20,22 @@ The nightly coded Online Java Script Okey Game, Rummikub your grandparents warne
     * [x] From middle deck.
   * ~Show all players (and points) on the screen.~
   * ~Show counter for middle tiles left.~
+  * Logic for simple game ending.
   * Check board on changes.
   * Live chat.
 * *Advanced*
   * Handle game on player disconnect (MongoDB).
   * Point management.
-  * Playing indicator tile at the 1st round logic.
-  * Logic for game ending.
-    * [ ] Ending w/o Joker.
-    * [ ] Ending w/ 1 Joker.
-    * [ ] Ending w/ 2 Jokers.
-    * [ ] Okey!
+  * ~Playing indicator tile at the 1st round logic.~
   * Client-side and Server-side validations.
     * [ ] Player deck.
     * [ ] Middle deck.
     * [ ] Discarded tiles.
-    * [ ] Game ending.
+    * [ ] Game endings.
+      * [ ] Ending w/o Joker.
+      * [ ] Ending w/ 1 Joker.
+      * [ ] Ending w/ 2 Jokers.
+      * [ ] Okey!
   * Multiple game rooms.
     * [ ] Create a room with point options.
     * [ ] Easy room join like url/:room_id.

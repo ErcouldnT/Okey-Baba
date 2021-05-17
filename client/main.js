@@ -3,6 +3,34 @@ var socket = io();
 // Html elements
 var form = document.getElementById('form');
 var input = document.getElementById('input');
+var gösterge = document.getElementById("gösterge");
+gösterge.addEventListener('dragenter', göstergeEnter);
+gösterge.addEventListener('dragover', göstergeOver);
+gösterge.addEventListener('dragleave', göstergeLeave);
+gösterge.addEventListener('drop', göstergeDrop);
+
+function göstergeEnter(e) {
+  e.preventDefault();
+};
+function göstergeOver(e) {
+  e.preventDefault();
+};
+function göstergeLeave(e) {
+  e.preventDefault();
+};
+function göstergeDrop(e) {
+  e.preventDefault();
+  const id = e.dataTransfer.getData('text/plain');
+  var sürüklenen = document.getElementById(id);
+  const element = taşCSStoOBJECT(sürüklenen);
+  element.isGösterge = true;
+  if (currentPlayer = you && round === 1 && !taşÇekmeHakkı) {
+    console.log("Gösterge atıldı: " + element.renk + " " + element.sayı);
+    // Socket aç, diğer oyunculara haber ver.
+    // !TODO: Diğer oyuncuların puanı azaltılacak.
+  };
+};
+
 var isimDivi = document.querySelector('.isim-al');
 var onlineListe = document.querySelector('.onlineliste');
 var oyuncuListesi = document.querySelector('.oyunculistesi');
@@ -29,6 +57,7 @@ let taşAldıMı = false;
 let list_of_gamers = [];
 let you;
 let round = 0;
+let göstergeTaşı;
 
 // Event listeners
 form.addEventListener('submit', function(e) {
@@ -499,6 +528,9 @@ socket.on('client konsol', function(msg) {
 });
 
 socket.on('oyuncular', function(msg) {
+  // Testing....
+
+
   list_of_gamers = msg;
   if (msg.length === 0) {
     onlineListe.classList.add("yoket");
@@ -529,7 +561,7 @@ socket.on('oyun bilgisi', function(bilgi) {
 
 socket.on('gösterge taşı', function(taş) {
   console.log(taş);
-  const göstergeTaşı = taş;
+  let göstergeTaşı = taş;
   // Okey taşı da gelsin, lazım olacak.
   // TODO: Desteden göstergeyi kes!?
   const divg = document.getElementById("gösterge");
