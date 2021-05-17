@@ -28,6 +28,7 @@ let ilkBaşlayan = false;
 let taşAldıMı = false;
 let list_of_gamers = [];
 let you;
+let round = 0;
 
 // Event listeners
 form.addEventListener('submit', function(e) {
@@ -426,6 +427,10 @@ socket.on('player', function(player) {
   you = player.you;
   ilkBaşlayan = player.ilkBaşlar;
   okey = player.okeytaşı;
+  if (currentPlayer === you) {
+    round += 1;
+    console.log("Round: " + round);
+  };
   ıstaka_ismi.textContent = list_of_gamers[you - 1].adı + " (20)"; // Hard-coded points for now.
   oyuncuİsimleriniGetir(list_of_gamers);
   //console.log(list_of_gamers);
@@ -444,6 +449,8 @@ socket.on('current player', function(info) {
   taşÇekmeHakkı = info.taşHakkı;
   console.log("current: " + currentPlayer + ", " + "you: " + you);
   if (currentPlayer === you) {
+    round += 1;
+    console.log("Round: " + round);
     infoMessage.textContent = "Sıra sende."
   } else {
     infoMessage.textContent = list_of_gamers[currentPlayer - 1].adı + " isimli oyuncu bekleniyor.";
