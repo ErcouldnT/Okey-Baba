@@ -23,11 +23,14 @@ function göstergeDrop(e) {
   const id = e.dataTransfer.getData('text/plain');
   var sürüklenen = document.getElementById(id);
   const element = taşCSStoOBJECT(sürüklenen);
-  element.isGösterge = true;
-  if (currentPlayer = you && round === 1 && !taşÇekmeHakkı) {
+  if (currentPlayer === you && round === 1 && !taşAldıMı && !gösterge_yaptı
+    && element.renk === göstergeTaşı.renk && element.sayı === göstergeTaşı.sayı) {
+    // !TODO: Round sayısı server'dan gelecek.
+    // Round 1'de herkes sırası gelmeden gösterge yapabilmeli...
     console.log("Gösterge atıldı: " + element.renk + " " + element.sayı);
     // Socket aç, diğer oyunculara haber ver.
     // !TODO: Diğer oyuncuların puanı azaltılacak.
+    gösterge_yaptı = true;  // Bir sonraki maçta tekrar 'false' yapmayı unutma.
   };
 };
 
@@ -58,6 +61,7 @@ let list_of_gamers = [];
 let you;
 let round = 0;
 let göstergeTaşı;
+let gösterge_yaptı = false;
 
 // Event listeners
 form.addEventListener('submit', function(e) {
@@ -561,7 +565,7 @@ socket.on('oyun bilgisi', function(bilgi) {
 
 socket.on('gösterge taşı', function(taş) {
   console.log(taş);
-  let göstergeTaşı = taş;
+  göstergeTaşı = taş;
   // Okey taşı da gelsin, lazım olacak.
   // TODO: Desteden göstergeyi kes!?
   const divg = document.getElementById("gösterge");
